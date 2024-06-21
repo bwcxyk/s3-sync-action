@@ -1,4 +1,4 @@
-name: "S3 Sync"
+name: "sync-s3-action"
 description: "Sync a directory to an AWS S3 repository"
 author: jakejarvis
 runs:
