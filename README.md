@@ -24,14 +24,14 @@ name: Upload Website
 on:
   push:
     branches:
-    - master
+    - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: jakejarvis/s3-sync-action@master
+    - uses: actions/checkout@v4
+    - uses: bwcxyk/s3-sync-action@1.0.0
       with:
         args: --acl public-read --follow-symlinks --delete
       env:
