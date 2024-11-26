@@ -27,15 +27,20 @@ if [ -n "$AWS_S3_ENDPOINT" ]; then
   ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
 fi
 
+# Prepare AWS CLI profile configuration
+aws_config_input="${AWS_ACCESS_KEY_ID}
+${AWS_SECRET_ACCESS_KEY}
+${AWS_REGION}"
+
+# Session token is used when generating temporary credentials using AWS STS
+if [ -n "$AWS_SESSION_TOKEN" ]; then
+  aws_config_input="${aws_config_input}
+${AWS_SESSION_TOKEN}"
+fi
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
-aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
-${AWS_ACCESS_KEY_ID}
-${AWS_SECRET_ACCESS_KEY}
-${AWS_REGION}
-text
-EOF
+echo "$aws_config_input" | aws configure --profile s3-sync-action > /dev/null 2>&1
 
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
